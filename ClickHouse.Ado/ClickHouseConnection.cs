@@ -90,6 +90,7 @@ public class ClickHouseConnection : DbConnection, IDbConnection {
             _tcpClient.Dispose();
             _tcpClient = null;
         }
+        _isBroken = false;
     }
 
     /// <inheritdoc />
