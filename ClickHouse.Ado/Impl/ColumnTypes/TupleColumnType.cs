@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClickHouse.Ado.Impl.ATG.Insert;
 using ClickHouse.Ado.Impl.Data;
+using Cysharp.Text;
 
 namespace ClickHouse.Ado.Impl.ColumnTypes;
 
@@ -30,7 +31,7 @@ internal class TupleColumnType : ColumnType {
             await column.Read(formatter, rows, cToken);
     }
 
-    public override string AsClickHouseType(ClickHouseTypeUsageIntent usageIntent) => $"Tuple({string.Join(",", Columns.Select(x => x.AsClickHouseType(usageIntent)))})";
+    public override string AsClickHouseType(ClickHouseTypeUsageIntent usageIntent) => $"Tuple({ZString.Join(",", Columns.Select(x => x.AsClickHouseType(usageIntent)))})";
 
     public override async Task Write(ProtocolFormatter formatter, int rows, CancellationToken cToken) {
         Debug.Assert(Rows == rows, "Row count mismatch!");

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClickHouse.Ado.Impl.ATG.Insert;
 using ClickHouse.Ado.Impl.Data;
+using Cysharp.Text;
 
 namespace ClickHouse.Ado.Impl.ColumnTypes;
 
@@ -38,7 +39,7 @@ internal class EnumColumnType : ColumnType {
         }
     }
 
-    public override string AsClickHouseType(ClickHouseTypeUsageIntent usageIntent) => $"Enum{BaseSize}({string.Join(",", Values.Select(x => $"{x.Item1}={x.Item2}"))})";
+    public override string AsClickHouseType(ClickHouseTypeUsageIntent usageIntent) => $"Enum{BaseSize}({ZString.Join(",", Values.Select(x => $"{x.Item1}={x.Item2}"))})";
 
     public override async Task Write(ProtocolFormatter formatter, int rows, CancellationToken cToken) {
         Debug.Assert(Rows == rows, "Row count mismatch!");

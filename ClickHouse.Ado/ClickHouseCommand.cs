@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClickHouse.Ado.Impl.ATG.Insert;
 using ClickHouse.Ado.Impl.Data;
+using Cysharp.Text;
 
 namespace ClickHouse.Ado;
 
@@ -142,7 +143,8 @@ public class ClickHouseCommand : DbCommand, IDbCommand {
 
             if (insertParser.errors.count == 0)
             {
-                var xText = new StringBuilder("INSERT INTO ");
+                using var xText = ZString.CreateStringBuilder();
+                xText.Append("INSERT INTO ");
                 xText.Append(insertParser.tableName);
                 if (insertParser.fieldList != null)
                 {

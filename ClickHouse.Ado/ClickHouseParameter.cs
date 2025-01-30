@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using ClickHouse.Ado.Impl;
+using Cysharp.Text;
 
 namespace ClickHouse.Ado;
 
@@ -50,7 +51,7 @@ public class ClickHouseParameter : DbParameter, IDbDataParameter {
     private string AsSubstitute(object val) {
         if (DbType == DbType.String || DbType == DbType.AnsiString || DbType == DbType.StringFixedLength || DbType == DbType.AnsiStringFixedLength || (DbType == 0 && val is string))
             if (!(val is string) && val is IEnumerable)
-                return string.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute));
+                return ZString.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute));
             else
                 return ProtocolFormatter.EscapeStringValue(val.ToString());
         if (DbType == DbType.DateTime || DbType == DbType.DateTime2 || DbType == DbType.DateTime2 || (DbType == 0 && val is DateTime))
@@ -60,9 +61,9 @@ public class ClickHouseParameter : DbParameter, IDbDataParameter {
         if (DbType == DbType.Guid)
             return $"'{(Guid)val}'";
         if (DbType != 0 && DbType != DbType.Object && !(val is string) && val is IEnumerable)
-            return string.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute));
+            return ZString.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute));
         if ((DbType == 0 || DbType == DbType.Object) && !(val is string) && val is IEnumerable)
-            return "[" + string.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute)) + "]";
+            return "[" + ZString.Join(",", ((IEnumerable)val).Cast<object>().Select(AsSubstitute)) + "]";
 
         if (val is IFormattable formattable)
             return formattable.ToString(null, CultureInfo.InvariantCulture);

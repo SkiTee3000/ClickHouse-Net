@@ -4,9 +4,9 @@
         <Description>.NET driver for Yandex ClickHouse. It implements native ClickHouse protocol with data compression (not a wrapper for HTTP client)</Description>
         <AssemblyTitle>ClickHouse.Ado</AssemblyTitle>
         <Authors>Andrey Zakharov</Authors>
-        <Version>2.0.5</Version>
+        <Version>2.0.7</Version>
 
-        <TargetFrameworks>net7.0;net462;net461;net6.0;netstandard2.1</TargetFrameworks>
+        <TargetFrameworks>net9.0;net462;net461;net6.0;net8.0;netstandard2.1</TargetFrameworks>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>ClickHouse.Ado</AssemblyName>
         <LangVersion>11</LangVersion>
@@ -35,7 +35,7 @@
     <PropertyGroup Condition="'$(TargetFramework)'!='net462' and '$(TargetFramework)'!='net461'">
         <DefineConstants>$(DefineConstants);CORE_FRAMEWORK</DefineConstants>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFramework)'=='net7.0'">
+    <PropertyGroup Condition="'$(TargetFramework)'=='net9.0' or '$(TargetFramework)'=='net8.0'">
         <DefineConstants>$(DefineConstants);MODERN_CORE_FRAMEWORK</DefineConstants>
     </PropertyGroup>
     <PropertyGroup Condition="'$(TargetFramework)'=='net462' or '$(TargetFramework)'=='net461'">
@@ -50,5 +50,8 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="ZString" Version="2.6.0" />
     </ItemGroup>
 </Project>

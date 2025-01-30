@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Cysharp.Text;
 
 namespace ClickHouse.Ado;
 
@@ -36,8 +37,8 @@ public class ClickHouseConnectionSettings {
     /// <param name="connectionString">Connection string.</param>
     /// <exception cref="FormatException">When connection string parameter is not supported.</exception>
     public ClickHouseConnectionSettings(string connectionString) {
-        var varName = new StringBuilder();
-        var varValue = new StringBuilder();
+        using var varName = ZString.CreateStringBuilder();
+        using var varValue = ZString.CreateStringBuilder();
 
         char? valueEscape = null;
         var inEscape = false;
@@ -282,7 +283,7 @@ public class ClickHouseConnectionSettings {
     /// </summary>
     /// <returns>Connection string.</returns>
     public override string ToString() {
-        var builder = new StringBuilder();
+        using var builder = ZString.CreateStringBuilder();
         foreach (var prop in Properties) {
             var value = prop.Value.GetValue(this, null);
             if (value == null) continue;
