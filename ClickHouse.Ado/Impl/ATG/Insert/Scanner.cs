@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Text;
 
 namespace ClickHouse.Ado.Impl.ATG.Insert {
 
@@ -277,7 +276,7 @@ internal class Scanner {
 			NextCh(); int ch1 = ch;
 			NextCh(); int ch2 = ch;
 			if (ch1 != 0xBB || ch2 != 0xBF) {
-				throw new FatalError(ZString.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
+				throw new FatalError(String.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
 			}
 			buffer = new UTF8Buffer(buffer); col = 0; charPos = -1;
 			NextCh();
