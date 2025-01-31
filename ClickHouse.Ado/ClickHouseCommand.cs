@@ -138,34 +138,35 @@ public class ClickHouseCommand : DbCommand, IDbCommand {
             if (connection.State != ConnectionState.Open) throw new InvalidOperationException("Connection isn't open");
 
             var insertParser = new Parser(new Scanner(new MemoryStream(Encoding.UTF8.GetBytes(CommandText))));
-            insertParser.errors.errorStream = new ZStringWriter();
+            insertParser.errors.errorStream = new StringWriter();
             insertParser.Parse();
 
             if (insertParser.errors.count == 0)
             {
-                using var xText = ZString.CreateStringBuilder();
-                xText.Append("INSERT INTO ");
+                //using var xText = ZString.CreateStringBuilder();
+                //xText.Append("INSERT INTO ");
+                var xText = new StringBuilder("INSERT INTO ");
                 xText.Append(insertParser.tableName);
-                //if (insertParser.fieldList != null)
-                //{
-                //    xText.Append("(");
-                //    insertParser.fieldList.Aggregate(xText, (builder, fld) => builder.Append(fld).Append(','));
-                //    xText.Remove(xText.Length - 1, 1);
-                //    xText.Append(")");
-                //}
                 if (insertParser.fieldList != null)
                 {
                     xText.Append("(");
-
-                    foreach (var fld in insertParser.fieldList)
-                    {
-                        xText.Append(fld);
-                        xText.Append(',');
-                    }
-
-                    xText.Remove(xText.Length - 1, 1);  // Удаляем лишнюю запятую
+                    insertParser.fieldList.Aggregate(xText, (builder, fld) => builder.Append(fld).Append(','));
+                    xText.Remove(xText.Length - 1, 1);
                     xText.Append(")");
                 }
+                //if (insertParser.fieldList != null)
+                //{
+                //    xText.Append("(");
+
+                //    foreach (var fld in insertParser.fieldList)
+                //    {
+                //        xText.Append(fld);
+                //        xText.Append(',');
+                //    }
+
+                //    xText.Remove(xText.Length - 1, 1);  // Удаляем лишнюю запятую
+                //    xText.Append(")");
+                //}
 
                 xText.Append(" VALUES");
 
@@ -226,7 +227,7 @@ public class ClickHouseCommand : DbCommand, IDbCommand {
                 await connection.Formatter.RunQuery(SubstituteParameters(CommandText), QueryProcessingStage.Complete, null, null, null, false, cToken);
             }
 
-            insertParser.errors.errorStream.Dispose();
+            //insertParser.errors.errorStream.Close();
 
             if (!readResponse) return;
             await connection.Formatter.ReadResponse(cToken);
