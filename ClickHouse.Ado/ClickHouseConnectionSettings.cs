@@ -283,7 +283,7 @@ public class ClickHouseConnectionSettings {
     /// </summary>
     /// <returns>Connection string.</returns>
     public override string ToString() {
-        using var builder = ZString.CreateStringBuilder();
+        var builder = new StringBuilder();
         foreach (var prop in Properties) {
             var value = prop.Value.GetValue(this, null);
             if (value == null) continue;
